@@ -97,7 +97,7 @@ const PostWidget = ({
       });
   
       if (!response.ok) {
-        throw new Error('Failed to share post');
+        throw new Error('Failed to share post', response);
       }
   
       // Fetch the updated post after sharing
