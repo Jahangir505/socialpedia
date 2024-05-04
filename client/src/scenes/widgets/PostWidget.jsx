@@ -85,6 +85,32 @@ const PostWidget = ({
     setCommentText("");
   };
 
+  const handlePostShare = async () => {
+    try {
+      // Send share request to server
+      const response = await fetch(`http://localhost:3001/posts/${postId}/share`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to share post');
+      }
+  
+      // Fetch the updated post after sharing
+      const updatedPostResponse = await fetch(`http://localhost:3001/posts/${postId}`);
+      const updatedPost = await updatedPostResponse.json();
+  
+      dispatch(setPost({ post: updatedPost }));
+    } catch (error) {
+      console.error("Error sharing post:", error);
+      // Handle error as needed
+    }
+  };
+
   return (
     <WidgetWrapper m="2rem 0">
       <Friend
@@ -126,7 +152,7 @@ const PostWidget = ({
           </FlexBetween>
         </FlexBetween>
 
-        <IconButton>
+        <IconButton onClick={handlePostShare}>
           <ShareOutlined />
         </IconButton>
       </FlexBetween>

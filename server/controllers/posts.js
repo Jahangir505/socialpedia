@@ -93,3 +93,29 @@ export const comment = async (req, res) => {
         }
 }
 
+export const sharePost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const { userId } = req.user; // Assuming you have user authentication middleware
+        
+        // Find the post to share
+        const postToShare = await Post.findById(postId);
+    
+        // Check if the post has already been shared by the current user
+        if (postToShare.sharedBy.includes(userId)) {
+          return res.status(400).json({ error: 'Post already shared by the user' });
+        }
+    
+        // Push the ID of the user who shared the post into the sharedBy array
+        postToShare.sharedBy.push(userId);
+        
+        // Save the updated post
+        const savedPost = await postToShare.save();
+    
+        res.status(201).json(savedPost);
+      } catch (error) {
+        console.error('Error sharing post:', error);
+        res.status(500).json({ error: 'Failed to share post' });
+      }
+}
+

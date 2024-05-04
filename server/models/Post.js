@@ -26,6 +26,15 @@ const postSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
+
+    sharedBy: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Reference to the user who shared the post
+    }],
+    sharedPost: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post', // Reference to the original post being shared
+    },
   },
   { timestamps: true }
 );
