@@ -72,3 +72,24 @@ export const likePost = async (req, res) => {
     }
 }
 
+export const comment = async (req, res) => {
+        try{
+            const {id} = req.params;
+            const newComment = req.body.comment;
+            const post = await Post.findById(id);
+            console.log("Comment", newComment);
+        if(!post) {
+            res.status(404).json({message: "Post not found."});
+        }
+
+        const updatePost = await Post.findByIdAndUpdate(
+            id,
+            { $push: { comments: newComment } },
+            { new: true }
+          );
+          res.status(200).json(updatePost);
+        } catch (err) {
+            res.status(409).json({message: err.message});
+        }
+}
+
